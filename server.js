@@ -7,13 +7,30 @@ const servidor = express()
 servidor.use(cors())
 servidor.use(bodyParser.json())
 
-servidor.get('/comidas', (request, response) => {
+servidor.get('/comidas',(request, response) => {
   response.send(controller.getAll())
 })
 
-servidor.post('/comidas', (request, response) => {
-  const novaComida = controller.add(request.body)
-  response.status(200).send(novaComida)
+servidor.get('/comidas/:id', (request, response) => {
+  const id =request.params.id
+  response.send(controller.getById())
+})
+
+servidor.post('/comidas',async  (request, response) => {
+  controller.getAll()
+  .then(comidas => response.send(comidas))
+})
+
+servidor.patch('/comidas/:id', (request, response)=> {
+  const id = request.params.id
+  const sucesso = controller.update(id,request.body)
+
+  response.sendStatus(204)
+  if (sucesso){
+    response.sendStatus(204)
+  }else{
+    response.sendStatus(404)
+  }
 })
 
 servidor.delete('/comidas/:id', (request, response) => {
